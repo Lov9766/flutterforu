@@ -9,7 +9,13 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title:  Text("Catalog App"),
       ),
-      drawer: Drawer(),
+      drawer: Drawer(
+        child: Column(
+          children: [Text("this is first line "),
+          Divider(),
+          Text("this is second line")],
+        )
+      ),
           //color: Colors.blueGrey,
          // type: MaterialType.canvas,
           body: Center(

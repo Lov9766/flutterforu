@@ -3,7 +3,6 @@ import 'package:flutter_application_4/pages/utils/routes.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
-
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -11,95 +10,125 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String name = "";
   bool changeButton = false;
+  final _formKey = GlobalKey<FormState>();
+  moveToHome(BuildContext context) async {
+    if (_formKey.currentState!.validate()){
+    setState(() {
+      changeButton = true;
+    });
+    await Future.delayed(Duration(seconds: 1));
+    await Navigator.pushNamed(context, Routes.homeRoute);
+    setState(() {
+      changeButton = false;
+    });
+  }}
 
   @override
   Widget build(BuildContext context) {
     return Material(
         color: Colors.white,
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Image.asset(
-                "assets/images/login_image.png",
-                fit: BoxFit.cover,
-                height: 300,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "Welcome $name",
-                style: TextStyle(
-                  fontSize: 30,
-                  //color: Colors.blue,
-                  //backgroundColor: Colors.white,
-                  fontWeight: FontWeight.bold,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Image.asset(
+                  "assets/images/login_image.png",
+                  fit: BoxFit.cover,
+                  height: 300,
                 ),
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Enter Username",
-                        labelText: "Username",
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Welcome $name",
+                  style: TextStyle(
+                    fontSize: 40,
+                    //color: Colors.blue,
+                    //backgroundColor: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      TextFormField(
+                          decoration: InputDecoration(
+                            hintText: "Enter Username",
+                            labelText: "Username",
+                          ),
+                          onChanged: (value) {
+                            name = value;
+                            setState(() {});
+                          },
+                          validator: (value) {
+                            if (value==null || value.isEmpty) {
+                              return "User name cant be empty";
+                            }
+                            return null;
+                          }),
+                      TextFormField(
+                        obscureText: true,
+                        decoration: InputDecoration(
+                            hintText: "enter password", labelText: "password"),
+                            validator: (value) {
+                            if (value==null ||value.isEmpty) {
+                              return "Password cant be empty" ;
+                            }
+                            else if(value.length < 6)
+                            {
+                            return "Passord lenght is atleast 6 ";
+                            }
+                            return null;
+                          }
                       ),
-                      onChanged: (value) {
-                        name = value;
-                        setState(() {});
-                      },
-                    ),
-                    TextFormField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                          hintText: "enter password", labelText: "password"),
-                    ),
-                    SizedBox(height: 20),
-                    InkWell(
-                      onTap: () async {
-                        setState(() {
-                          changeButton = true;
-                        });
-                        await Future.delayed(Duration(seconds: 1));
-                         Navigator.pushNamed(context, Routes.homeRoute);
-                      },
-                      child: AnimatedContainer(
-                        duration: Duration(seconds: 1),
-                        width: changeButton ? 40 : 80,
-                        height: 40,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: Colors.deepPurple,
-                            borderRadius: BorderRadiusDirectional.circular(
-                                changeButton ? 20 : 8)),
-                        child: changeButton
-                            ? Icon(
-                                Icons.done,
-                                color: Colors.white,
-                              )
-                            : Text(
-                                "login",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: Colors.white),
-                              ),
-                      ),
-                    )
+                      SizedBox(height: 20),
+                      Material(
+                        color: Colors.deepPurple,
+                        borderRadius: BorderRadiusDirectional.circular(
+                            changeButton ? 20 : 8),
+                        child: InkWell(
+                          // splashColor: Colors.red,
+                          onTap: () => moveToHome(context),
 
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     Navigator.pushNamed(context, Routes.homeRoute);
-                    //   },
-                    //   style: TextButton.styleFrom(minimumSize: Size(140, 50)),
-                    //   child: Text("login"),
-                    // )
-                  ],
-                ),
-              )
-            ],
+                          child: AnimatedContainer(
+                            duration: Duration(seconds: 1),
+                            width: changeButton ? 40 : 80,
+                            height: 40,
+                            alignment: Alignment.center,
+                            child: changeButton
+                                ? Icon(
+                                    Icons.done,
+                                    color: Colors.white,
+                                  )
+                                : Text(
+                                    "login",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.white),
+                                  ),
+                          ),
+                        ),
+                      )
+
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     Navigator.pushNamed(context, Routes.homeRoute);
+                      //   },
+                      //   style: TextButton.styleFrom(minimumSize: Size(140, 50)),
+                      //   child: Text("login"),
+                      // )
+                      // decoration: BoxDecoration(
+                      //       color: Colors.deepPurple,
+                      //       ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ));
   }
